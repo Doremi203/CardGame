@@ -10,8 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c8cca73958ea4a3dbb565054fe0ca68d, type: 3}
-  m_Name: Firestorm
+  m_Name: IceBlast
   m_EditorClassIdentifier: 
-  <CardName>k__BackingField: 
-  <Color>k__BackingField: {r: 0, g: 0, b: 0, a: 0}
-  <Sprite>k__BackingField: {fileID: 0}
+  <CardName>k__BackingField: IceBlast
+  <Color>k__BackingField: {r: 0, g: 0.99215686, b: 0.971896, a: 1}
+  <Sprite>k__BackingField: {fileID: 21300000, guid: ddbb02f8ebf8f4d39a090ff29f505554, type: 3}
+  <BackSprite>k__BackingField: {fileID: 21300000, guid: f1a396cd8eeee478c96102ebcb7d8da7, type: 3}

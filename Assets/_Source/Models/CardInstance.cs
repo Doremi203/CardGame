@@ -1,3 +1,4 @@
+using Core;
 using ScriptableObjects;
 
 namespace Models
@@ -5,7 +6,7 @@ namespace Models
     public class CardInstance
     {
         public CardAsset CardAsset { get; private set; }
-        public int LayoutNumber { get; private set; }
+        public int LayoutNumber { get; private set; } = -1;
         public int CardPosition { get; private set; }
         
         public CardInstance(CardAsset cardAsset)
@@ -13,10 +14,11 @@ namespace Models
             CardAsset = cardAsset;
         }
 
-        public void MoveToLayout(int layoutNumber)
+        public void MoveToLayout(int layoutId)
         {
-            LayoutNumber = layoutNumber;
-            CardPosition = 0;
+            var lastPos = CardGame.Instance.GetCardsInLayout(layoutId).Count;
+            LayoutNumber = layoutId;
+            CardPosition = lastPos;
         }
     }
 }

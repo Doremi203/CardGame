@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using Models;
 using ScriptableObjects;
@@ -32,10 +33,34 @@ namespace Core
                 }
             }
         }
+        
+        public void AddPlayer(Player player)
+        {
+            _players.Add(player);
+        }
+
+        public List<CardInstance> GetCardsInLayout(int layoutId)
+        {
+            var cards = new List<CardInstance>();
+            foreach (var kvp in _cardViews)
+            {
+                if (kvp.Key.LayoutNumber == layoutId)
+                {
+                    cards.Add(kvp.Key);
+                }
+            }
+            
+            return cards;
+        }
 
         private void Awake()
         {
             Instance = this;
+        }
+        
+        private void Start()
+        {
+            StartGame();
         }
         
         private void StartGame()
@@ -44,17 +69,17 @@ namespace Core
             {
                 foreach (var cardAsset in CardAssets)
                 {
-                    var cardInstance = CreateCard(cardAsset, 0);
+                    var cardInstance = CreateCard(cardAsset, player.Layout.LayoutId);
                     player.Cards.Add(cardInstance);
                 }
             }
         }
 
-        private CardInstance CreateCard(CardAsset cardAsset, int layoutNumber)
+        private CardInstance CreateCard(CardAsset cardAsset, int layoutId)
         {
             var cardInstance = new CardInstance(cardAsset);
             CreateCardView(cardInstance);
-            cardInstance.MoveToLayout(layoutNumber);
+            cardInstance.MoveToLayout(layoutId);
             return cardInstance;
         }
 
@@ -65,9 +90,9 @@ namespace Core
             _cardViews.Add(cardInstance, cardView);
         }
 
-        public void AddPlayer(Player player)
+        public CardView GetCardView(CardInstance card)
         {
-            _players.Add(player);
+            return _cardViews[card];
         }
     }
 }
