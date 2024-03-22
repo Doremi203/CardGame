@@ -311,6 +311,9 @@ MonoBehaviour:
   <CardAssets>k__BackingField:
   - {fileID: 11400000, guid: c3e502e2bd8fa4f168c5a485ee198f6a, type: 2}
   - {fileID: 11400000, guid: a28b8afff444b4daf8da36b8dc98a9b7, type: 2}
+  <InitialDeck>k__BackingField: []
+  <HandSize>k__BackingField: 0
+  <DeckLayoutId>k__BackingField: 0
   _cardViewPrefab: {fileID: 3165353462546937147, guid: b65d8a2dfcf5a44c3a5c91e4b9f2f699, type: 3}
 --- !u!4 &410801193
 Transform:

@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Models;
@@ -9,14 +10,20 @@ namespace Core
 {
     public class CardGame : MonoBehaviour
     {
-        [field: SerializeField]
+        [field: SerializeField] 
         public List<CardAsset> CardAssets { get; private set; }
-        [SerializeField]
-        private GameObject _cardViewPrefab;
-        
+        [field: SerializeField]
+        public List<DeckPart> InitialDeck { get; private set; }
+        [field: SerializeField] 
+        public int HandSize { get; private set; }
+        [field: SerializeField]
+        public int DeckLayoutId { get; private set; }
+        [SerializeField] private GameObject _cardViewPrefab;
+
         private static CardGame _instance;
         private readonly List<Player> _players = new();
         private readonly Dictionary<CardInstance, CardView> _cardViews = new();
+        private readonly List<CardInstance> _deck = new();
 
         public static CardGame Instance
         {
@@ -33,10 +40,15 @@ namespace Core
                 }
             }
         }
-        
+
         public void AddPlayer(Player player)
         {
             _players.Add(player);
+        }
+        
+        public CardView GetCardView(CardInstance card)
+        {
+            return _cardViews[card];
         }
 
         public List<CardInstance> GetCardsInLayout(int layoutId)
@@ -49,10 +61,10 @@ namespace Core
                     cards.Add(kvp.Key);
                 }
             }
-            
+
             return cards;
         }
-        
+
         public void RecalculateLayout(int layoutId)
         {
             var cards = GetCardsInLayout(layoutId);
@@ -66,12 +78,12 @@ namespace Core
         {
             Instance = this;
         }
-        
+
         private void Start()
         {
             StartGame();
         }
-        
+
         private void StartGame()
         {
             foreach (var player in _players)
@@ -80,6 +92,19 @@ namespace Core
                 {
                     var cardInstance = CreateCard(cardAsset, player.Layout.LayoutId);
                     player.Cards.Add(cardInstance);
+                }
+            }
+            InitDeck();
+        }
+
+        private void InitDeck()
+        {
+            foreach (var deckPart in InitialDeck)
+            {
+                for (int i = 0; i < deckPart.CardCount; i++)
+                {
+                    var card = CreateCard(deckPart.CardAsset, DeckLayoutId);
+                    _deck.Add(card);
                 }
             }
         }
@@ -98,10 +123,22 @@ namespace Core
             cardView.Init(cardInstance);
             _cardViews.Add(cardInstance, cardView);
         }
-
-        public CardView GetCardView(CardInstance card)
+        
+        private void StartTurn()
         {
-            return _cardViews[card];
+            foreach (var player in _players)
+            {
+                
+            }
         }
+    }
+
+    [Serializable]
+    public class DeckPart
+    {
+        [field: SerializeField]
+        public CardAsset CardAsset { get; set; }
+        [field: SerializeField]
+        public int CardCount { get; set; }
     }
 }
