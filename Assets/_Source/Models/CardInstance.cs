@@ -7,8 +7,8 @@ namespace Models
     {
         public CardAsset CardAsset { get; private set; }
         public int LayoutNumber { get; private set; } = -1;
-        public int CardPosition { get; private set; }
-        
+        public int CardPosition { get; set; }
+
         public CardInstance(CardAsset cardAsset)
         {
             CardAsset = cardAsset;
@@ -16,9 +16,10 @@ namespace Models
 
         public void MoveToLayout(int layoutId)
         {
-            var lastPos = CardGame.Instance.GetCardsInLayout(layoutId).Count;
+            var previousLayout = LayoutNumber;
             LayoutNumber = layoutId;
-            CardPosition = lastPos;
+            CardGame.Instance.RecalculateLayout(LayoutNumber);
+            CardGame.Instance.RecalculateLayout(previousLayout);
         }
     }
 }

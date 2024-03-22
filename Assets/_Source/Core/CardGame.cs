@@ -52,6 +52,15 @@ namespace Core
             
             return cards;
         }
+        
+        public void RecalculateLayout(int layoutId)
+        {
+            var cards = GetCardsInLayout(layoutId);
+            for (int i = 0; i < cards.Count; i++)
+            {
+                cards[i].CardPosition = i;
+            }
+        }
 
         private void Awake()
         {
