@@ -11,5 +11,7 @@ namespace ScriptableObjects
         public Color Color { get; private set; }
         [field: SerializeField]
         public Sprite Sprite { get; private set; }
+        [field: SerializeField]
+        public Sprite BackSprite { get; private set; }
     }
 }

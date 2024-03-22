@@ -7,6 +7,8 @@ namespace Core
 {
     public class Player : MonoBehaviour
     {
+        [field: SerializeField]
+        public CardLayout Layout { get; private set; }
         public List<CardInstance> Cards { get; } = new();
 
         private void Start()
