@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Models;
 using ScriptableObjects;
 using UnityEngine;
@@ -18,12 +19,15 @@ namespace Core
         public int HandSize { get; private set; }
         [field: SerializeField]
         public int DeckLayoutId { get; private set; }
+        [field: SerializeField]
+        public int DiscardLayoutId { get; private set; }
+        [field: SerializeField]
+        public int FieldLayoutId { get; private set; }
         [SerializeField] private GameObject _cardViewPrefab;
+        [SerializeField] private List<int> _playerLayouts = new();
 
         private static CardGame _instance;
-        private readonly List<Player> _players = new();
         private readonly Dictionary<CardInstance, CardView> _cardViews = new();
-        private readonly List<CardInstance> _deck = new();
 
         public static CardGame Instance
         {
@@ -39,11 +43,6 @@ namespace Core
                     _instance = value;
                 }
             }
-        }
-
-        public void AddPlayer(Player player)
-        {
-            _players.Add(player);
         }
         
         public CardView GetCardView(CardInstance card)
@@ -86,12 +85,11 @@ namespace Core
 
         private void StartGame()
         {
-            foreach (var player in _players)
+            foreach (var layoutId in _playerLayouts)
             {
                 foreach (var cardAsset in CardAssets)
                 {
-                    var cardInstance = CreateCard(cardAsset, player.Layout.LayoutId);
-                    player.Cards.Add(cardInstance);
+                    CreateCard(cardAsset, layoutId);
                 }
             }
             InitDeck();
@@ -103,18 +101,29 @@ namespace Core
             {
                 for (int i = 0; i < deckPart.CardCount; i++)
                 {
-                    var card = CreateCard(deckPart.CardAsset, DeckLayoutId);
-                    _deck.Add(card);
+                    CreateCard(deckPart.CardAsset, DeckLayoutId);
                 }
             }
         }
+        
+        public void ShuffleDeck()
+        {
+            var deck = GetCardsInLayout(DeckLayoutId);
+            
+            for (int i = 0; i < deck.Count; i++)
+            {
+                var temp = deck[i].CardPosition;
+                var randomIndex = UnityEngine.Random.Range(i, deck.Count);
+                deck[i].CardPosition = deck[randomIndex].CardPosition;
+                deck[randomIndex].CardPosition = temp;
+            }
+        }
 
-        private CardInstance CreateCard(CardAsset cardAsset, int layoutId)
+        private void CreateCard(CardAsset cardAsset, int layoutId)
         {
             var cardInstance = new CardInstance(cardAsset);
             CreateCardView(cardInstance);
             cardInstance.MoveToLayout(layoutId);
-            return cardInstance;
         }
 
         private void CreateCardView(CardInstance cardInstance)
@@ -124,11 +133,23 @@ namespace Core
             _cardViews.Add(cardInstance, cardView);
         }
         
-        private void StartTurn()
+        public void StartTurn()
         {
-            foreach (var player in _players)
+            foreach (var layoutId in _playerLayouts)
             {
-                
+                DrawCards(layoutId);
+            }
+        }
+
+        private void DrawCards(int playerLayoutId)
+        {
+            var playerCards = GetCardsInLayout(playerLayoutId); 
+            for (int i = playerCards.Count; i < HandSize; i++)
+            {
+                var deck = GetCardsInLayout(DeckLayoutId);
+                if (deck.Count == 0)
+                    return;
+                deck[^1].MoveToLayout(playerLayoutId);
             }
         }
     }

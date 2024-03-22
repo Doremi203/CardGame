@@ -1,11 +1,14 @@
+using System;
+using Core;
 using Models;
 using TMPro;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 namespace View
 {
-    public class CardView : MonoBehaviour
+    public class CardView : MonoBehaviour, IPointerDownHandler
     {
         [SerializeField] private Image _image;
         [SerializeField] private GameObject _cardFront;
@@ -21,6 +24,11 @@ namespace View
             RectTransform = transform as RectTransform;
             if (RectTransform is null)
                 Debug.LogError("CardView must be placed on gameobject with a RectTransform.");
+        }
+
+        private void PlayCard()
+        {
+            _cardInstance.MoveToLayout(CardGame.Instance.FieldLayoutId);
         }
 
         public void Init(CardInstance cardInstance)
@@ -59,6 +67,12 @@ namespace View
             }
 
             _image.sprite = sprite;
+        }
+
+        public void OnPointerDown(PointerEventData eventData)
+        {
+            Debug.Log($"Clicked on card: {_cardInstance.CardAsset.name}");
+            PlayCard();
         }
     }
 }
