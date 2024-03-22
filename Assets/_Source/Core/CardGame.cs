@@ -44,11 +44,18 @@ namespace Core
             {
                 foreach (var cardAsset in CardAssets)
                 {
-                    var cardInstance = new CardInstance(cardAsset); 
-                    CreateCardView(cardInstance);
+                    var cardInstance = CreateCard(cardAsset, 0);
                     player.Cards.Add(cardInstance);
                 }
             }
+        }
+
+        private CardInstance CreateCard(CardAsset cardAsset, int layoutNumber)
+        {
+            var cardInstance = new CardInstance(cardAsset);
+            CreateCardView(cardInstance);
+            cardInstance.MoveToLayout(layoutNumber);
+            return cardInstance;
         }
 
         private void CreateCardView(CardInstance cardInstance)
